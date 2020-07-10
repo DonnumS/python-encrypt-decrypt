@@ -2,10 +2,12 @@
 
 
 from termcolor import colored
-from colorama import Fore, Style
+from colorama import Fore, Back, Style
 from cryptoFunctions import *
 from substitutionCipher import *
 from cbcCipher import *
+from caesarCipher import *
+from information import *
 import time
 import sys
 import itertools
@@ -35,10 +37,11 @@ def delay_print(s):
         time.sleep(0.2)
 
 
-def menu():
+def welcome():
     print(f"\n\t\t\t\t{Fore.GREEN}Welcome to Crypt\n")
     print(
         f"\t\t\t{Fore.CYAN}  A simple encryptor/decryptor{Style.RESET_ALL}\n")
+    print(f"\n{Back.RED}Disclaimer!!!\nThis program should never be used to encrypt sensitive information.\nIt's only purpose is for me to learn cryptographic algorithms in python\n{Style.RESET_ALL}")
 
 
 def performDecode(msg, mode):
@@ -160,12 +163,20 @@ def encSub():
     return encrypted
 
 
+def caesar(mode):
+    message = input("Type in your message: ")
+    key = int(input("Choose a offest 1-26: "))
+    text = caesarCipher(mode, message, key)
+    return text
+
+
 def again():
     ans = input("(y/n) ")
 
     if(ans == 'y'):
         main()
     elif(ans == 'n'):
+        print("Finished")
         return
     else:
         print("choose y or n")
@@ -192,16 +203,14 @@ def banner():
 
 
 def main():
-
-    menu()
     spinner()
-    print("What type of encryption or decryption do you want to use?\n1) CBC\n2) Repeated XOR\n3) Substitution")
+    print("What type of encryption or decryption do you want to use?\n1) CBC\n2) Repeated XOR\n3) Substitution\n4) Caesar Cipher")
     ans = int(input("Specify: "))
     if ans == 1:
-        print("\nDo you want to (1) decrypt or (2) encrypt?")
+        print("\nDo you want to (1) decrypt or (2) encrypt. (3) About")
         action = int(input("Specify: "))
 
-        while(action > 2 or action < 1):
+        while(action > 3 or action < 1):
             print("Try again")
             action = int(input("Specify: "))
 
@@ -209,6 +218,9 @@ def main():
             cipher = decryptWithCBC()
         elif action == 2:
             cipher = encryptWithCBC()
+        elif action == 3:
+            informationCBC()
+            action = int(input("Specify: "))
 
     elif ans == 2:
 
@@ -227,13 +239,32 @@ def main():
         print("\nDo you want to (1) decrypt or (2) encrypt?")
         action = int(input("Specify: "))
 
-        while(action > 2 or action < 1):
+        while(action > 3 or action < 1):
             print("Try again")
             action = int(input("Specify: "))
         if action == 1:
             cipher = decSub()
         elif action == 2:
             cipher = encSub()
+        elif action == 3:
+            informationSub()
+            action = int(input("Specify: "))
+
+    elif ans == 4:
+        print("\nDo you want to (1) decrypt or (2) encrypt? (3) About")
+        action = int(input("Specify: "))
+
+        while(action > 3 or action < 1):
+            print("Try again")
+            action = int(input("Specify: "))
+        if action == 1:
+            cipher = caesar('e')
+        elif action == 2:
+            cipher = caesar('d')
+        elif action == 3:
+            informationCC()
+            action = int(input("Specify: "))
+
     print("\nReady to return message")
     time.sleep(0.5)
     print(f"Here is your message encrypted/decrypted:\n{Fore.GREEN}")
@@ -245,6 +276,7 @@ def main():
 
 if __name__ == "__main__":
     banner()
+    welcome()
     main()
 
 
