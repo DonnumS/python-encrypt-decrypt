@@ -1,13 +1,16 @@
+#!/usr/bin/env python3
+
 from cryptoFunctions import *
 from termcolor import colored
 from colorama import Fore, Style
+from substitutionCipher import *
 import time
 import sys
 import itertools
 import sys
 
-spin = itertools.cycle([f'{Fore.RED}-{Style.RESET_ALL}', f'{Fore.RED}/{Style.RESET_ALL}',
-                        f'{Fore.RED}|{Style.RESET_ALL}', f'{Fore.RED}\\{Style.RESET_ALL}'])
+spin = itertools.cycle([f'{Fore.RED}-{Style.RESET_ALL}', f'{Fore.BLUE}/{Style.RESET_ALL}',
+                        f'{Fore.YELLOW}|{Style.RESET_ALL}', f'{Fore.WHITE}\\{Style.RESET_ALL}'])
 
 
 def spinner():
@@ -134,6 +137,27 @@ def encryptWithCBC():
     return(encodeHex(encrypted))
 
 
+def decSub():
+    time.sleep(0.5)
+    ciphertext = input("\n\nType in what you want decrypted: ")
+    key = input("Type in key used for the encryption: ")
+    decrypted = decryptSub(ciphertext, key)
+    return decrypted
+
+
+def encSub():
+    key = makeKey()
+    print("We will generate a random alphabet key for you")
+    print(f"{Fore.YELLOW}Write it down!!{Fore.WHITE}")
+    time.sleep(2)
+    spinner()
+    print("Key is: ", colored(key, 'yellow'))
+    time.sleep(1)
+    message = input("\n\nType in what you want encrypted: ")
+    encrypted = encryptSub(message, key)
+    return encrypted
+
+
 def again():
     ans = input("(y/n) ")
 
@@ -152,7 +176,7 @@ def banner():
     """
     banner = fr'''
 {Fore.CYAN}________{Fore.GREEN}/\\\\\\\\\{Fore.CYAN}_________________________________________________________
- _____{Fore.GREEN}/\\\///////{Fore.CYAN}__________________________________________________________
+ _____{Fore.GREEN}/\\\///////{Fore.CYAN}___________________________________________________________
   ___{Fore.GREEN}/\\\/{Fore.CYAN}____________________________{Fore.GREEN}/\\\{Fore.CYAN}__{Fore.GREEN}/\\\{Fore.CYAN}___{Fore.GREEN}/\\\\\\\\\{Fore.CYAN}______{Fore.GREEN}/\\\{Fore.CYAN}______
    __{Fore.GREEN}/\\\{Fore.CYAN}______________{Fore.GREEN}/\\/\\\\\\\{Fore.CYAN}____{Fore.GREEN}\//\\\/\\\{Fore.CYAN}___{Fore.GREEN}/\\\/////\\\{Fore.CYAN}__{Fore.GREEN}/\\\\\\\\\\\{Fore.CYAN}_
     _{Fore.GREEN}\/\\\{Fore.CYAN}_____________{Fore.GREEN}\/\\\/////\\\{Fore.CYAN}____{Fore.GREEN}\//\\\\\{Fore.CYAN}___{Fore.GREEN}\/\\\\\\\\\\{Fore.CYAN}__{Fore.GREEN}\////\\\////{Fore.CYAN}__
@@ -166,14 +190,18 @@ def banner():
 
 
 def main():
-    banner()
+
     menu()
     spinner()
-    print("What type of encryption or decryption do you want to use?\n1) CBC\n2) Repeated XOR")
+    print("What type of encryption or decryption do you want to use?\n1) CBC\n2) Repeated XOR\n3) Substitution")
     ans = int(input("Specify: "))
     if ans == 1:
         print("\nDo you want to (1) decrypt or (2) encrypt?")
         action = int(input("Specify: "))
+
+        while(action > 2 or action < 1):
+            print("Try again")
+            action = int(input("Specify: "))
 
         if action == 1:
             cipher = decryptWithCBC()
@@ -192,11 +220,18 @@ def main():
             cipher = decryptMessage()
         elif action == 2:
             cipher = encryptMessage()
-        else:
-            print("Choose 1 or 2")
-            time.sleep(2)
-            main()
 
+    elif ans == 3:
+        print("\nDo you want to (1) decrypt or (2) encrypt?")
+        action = int(input("Specify: "))
+
+        while(action > 2 or action < 1):
+            print("Try again")
+            action = int(input("Specify: "))
+        if action == 1:
+            cipher = decSub()
+        elif action == 2:
+            cipher = encSub()
     print("\nReady to return message")
     time.sleep(0.5)
     print(f"Here is your message encrypted/decrypted:\n{Fore.GREEN}")
@@ -207,4 +242,13 @@ def main():
 
 
 if __name__ == "__main__":
+    banner()
     main()
+
+
+"""
+
+fnrrn!na!nl!rnyr!.ea!å!yunkkn!ew!fnrrn!.tlsnana!qaæ
+vqifn.sb,uk wlezoayrtjxgdmhcp!
+
+"""
