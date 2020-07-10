@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
-from cryptoFunctions import *
+
 from termcolor import colored
 from colorama import Fore, Style
+from cryptoFunctions import *
 from substitutionCipher import *
+from cbcCipher import *
 import time
 import sys
 import itertools
