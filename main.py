@@ -1,11 +1,13 @@
 from cryptoFunctions import *
+from termcolor import colored
+from colorama import Fore, Style
 import time
 import sys
-
 import itertools
 import sys
 
-spin = itertools.cycle(['-', '/', '|', '\\'])
+spin = itertools.cycle([f'{Fore.RED}-{Style.RESET_ALL}', f'{Fore.RED}/{Style.RESET_ALL}',
+                        f'{Fore.RED}|{Style.RESET_ALL}', f'{Fore.RED}\\{Style.RESET_ALL}'])
 
 
 def spinner():
@@ -13,7 +15,7 @@ def spinner():
     while True:
         sys.stdout.write(next(spin))   # write the next character
         sys.stdout.flush()                # flush stdout buffer (actual character display)
-        sys.stdout.write('\b')            # erase the last written char
+        sys.stdout.write(f'\b')            # erase the last written char
         if counter == 19:
             sys.stdout.write('\b')
             break
@@ -29,8 +31,9 @@ def delay_print(s):
 
 
 def menu():
-    print("\nWelcome to the encryptor/decryptor\n\n")
-    print("This program will encrypt or decrypt your message\n")
+    print(f"\n\t\t\t\t{Fore.GREEN}Welcome to Crypt\n")
+    print(
+        f"\t\t\t{Fore.CYAN}  A simple encryptor/decryptor{Style.RESET_ALL}\n")
 
 
 def performDecode(msg, mode):
@@ -51,7 +54,7 @@ def performEncode(msg, mode):
 
 
 def decryptMessage():
-    print("Specify what type of format the message is\n1) hex\n2)base64")
+    print("Specify what type of format the message is\n1) hex\n2) base64")
     typeData = int(input("Specify: "))
     message = input("\n\nType in what you want decrypted: ")
     print("\nType in the same key that was used to encrypt")
@@ -115,11 +118,12 @@ def decryptWithCBC():
 
 def encryptWithCBC():
     time.sleep(0.5)
-    print("We will generate a random 16 byte key for you\nWrite it down!")
+    print("We will generate a random 16 byte key for you")
+    print(f"{Fore.YELLOW}Write it down!!{Fore.WHITE}")
     time.sleep(2)
     spinner()
     key = generateRandomKey()
-    print("Key is: {}".format(key))
+    print("Key is: ", colored(key, 'yellow'))
     iv = b'\x00' * AES.block_size
     time.sleep(1)
     message = input("\n\nType in what you want encrypted: ")
@@ -142,13 +146,34 @@ def again():
         again()
 
 
+def banner():
+    """
+    Looks messy but it prints a cool loking banner with big letters and different color for letter and background
+    """
+    banner = fr'''
+{Fore.CYAN}________{Fore.GREEN}/\\\\\\\\\{Fore.CYAN}_________________________________________________________
+ _____{Fore.GREEN}/\\\///////{Fore.CYAN}__________________________________________________________
+  ___{Fore.GREEN}/\\\/{Fore.CYAN}____________________________{Fore.GREEN}/\\\{Fore.CYAN}__{Fore.GREEN}/\\\{Fore.CYAN}___{Fore.GREEN}/\\\\\\\\\{Fore.CYAN}______{Fore.GREEN}/\\\{Fore.CYAN}______
+   __{Fore.GREEN}/\\\{Fore.CYAN}______________{Fore.GREEN}/\\/\\\\\\\{Fore.CYAN}____{Fore.GREEN}\//\\\/\\\{Fore.CYAN}___{Fore.GREEN}/\\\/////\\\{Fore.CYAN}__{Fore.GREEN}/\\\\\\\\\\\{Fore.CYAN}_
+    _{Fore.GREEN}\/\\\{Fore.CYAN}_____________{Fore.GREEN}\/\\\/////\\\{Fore.CYAN}____{Fore.GREEN}\//\\\\\{Fore.CYAN}___{Fore.GREEN}\/\\\\\\\\\\{Fore.CYAN}__{Fore.GREEN}\////\\\////{Fore.CYAN}__
+     _{Fore.GREEN}\//\\\{Fore.CYAN}____________{Fore.GREEN}\/\\\{Fore.CYAN}___{Fore.GREEN}\///{Fore.CYAN}______{Fore.GREEN}\//\\\{Fore.CYAN}____{Fore.GREEN}\/\\\//////{Fore.CYAN}______{Fore.GREEN}\/\\\{Fore.CYAN}______
+      __{Fore.GREEN}\///\\\{Fore.CYAN}__________{Fore.GREEN}\/\\\{Fore.CYAN}__________{Fore.GREEN}/\\{Fore.CYAN}_{Fore.GREEN}/\\\{Fore.CYAN}_____{Fore.GREEN}\/\\\{Fore.CYAN}____________{Fore.GREEN}\/\\\{Fore.CYAN}_{Fore.GREEN}/\\{Fore.CYAN}__
+       ____{Fore.GREEN}\////\\\\\\\\\{Fore.CYAN}_{Fore.GREEN}\/\\\{Fore.CYAN}_________{Fore.GREEN}\//\\\\/{Fore.CYAN}______{Fore.GREEN}\/\\\{Fore.CYAN}____________{Fore.GREEN}\//\\\\\{Fore.CYAN}___
+        _______{Fore.GREEN}\/////////{Fore.CYAN}__{Fore.GREEN}\///{Fore.CYAN}___________{Fore.GREEN}\////{Fore.CYAN}________{Fore.GREEN}\///{Fore.CYAN}______________{Fore.GREEN}\/////{Fore.CYAN}____
+    '''
+
+    print(colored(banner, 'green'))
+
+
 def main():
+    banner()
     menu()
-    print("What type of encryption/decryptino do you want to use?\n1)CBC\n2)Repeated XOR")
-    ans = int(input("Specify 1 or 2: "))
+    spinner()
+    print("What type of encryption or decryption do you want to use?\n1) CBC\n2) Repeated XOR")
+    ans = int(input("Specify: "))
     if ans == 1:
-        print("Do you want to (1) decrypt or (2) encrypt?")
-        action = int(input("Specify 1 2: "))
+        print("\nDo you want to (1) decrypt or (2) encrypt?")
+        action = int(input("Specify: "))
 
         if action == 1:
             cipher = decryptWithCBC()
@@ -157,9 +182,12 @@ def main():
 
     elif ans == 2:
 
-        print("Do you want to (1) decrypt or (2) encrypt?")
-        action = int(input("Specify 1 2: "))
+        print("\nDo you want to (1) decrypt or (2) encrypt?")
+        action = int(input("Specify: "))
 
+        while(action > 2 or action < 1):
+            print("Try again")
+            action = int(input("Specify: "))
         if action == 1:
             cipher = decryptMessage()
         elif action == 2:
@@ -169,26 +197,14 @@ def main():
             time.sleep(2)
             main()
 
-    print("Ready to return message")
-    spinner()
-    print("Here is your message encrypted/decrypted:\n")
+    print("\nReady to return message")
+    time.sleep(0.5)
+    print(f"Here is your message encrypted/decrypted:\n{Fore.GREEN}")
     print(cipher)
     time.sleep(2)
-    print("Do you want to run the program again?")
+    print(f"{Style.RESET_ALL}\nDo you want to run the program again?")
     again()
 
 
 if __name__ == "__main__":
-    print(decodeHex("54686973206973206120736563726574206d657373616765"))
     main()
-
-
-"""
-be0b7244cf593987839c02a90153c90b
-67af251f50f3a8b9781ff70f08642a436cc7df293752485b74aa9fccc80da810093e3182fe5a938d1084e8fa65b2b22f
-
-2362ed5c7511c7a1306cd0901ae278b4
-
-c8dfef83f07a223cf6c28b9adaff33ff848892fbd272b8d190c2c5ddaeea04d09c3e5c62f0c6c7606b106c7db418d545975011bd7d9d559afd11b03c258a9d21c0c77b7b04a18042b8869898b11490f14083467d762946f0965dde097f32e69904c77f6ee2fa79bc1899ebb6ff3921de56d974963e87ce7f00381536cab9446f4731ec0d8231e802249d6ddda38b6fb800bc4d0f8788e80014139977f8fe6a79
-
-"""

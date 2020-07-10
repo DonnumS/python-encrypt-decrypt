@@ -146,7 +146,3 @@ def decryptCBC(data, key, iv):
 def generateRandomKey():
     key = get_random_bytes(16)
     return encodeHex(key)
-
-
-key = generateRandomKey()
-print("This is the key: {}".format(key))
