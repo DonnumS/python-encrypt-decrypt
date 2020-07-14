@@ -25,11 +25,3 @@ def caesarCipher(mode, message, key):
             translated += symbol
     return translated
 
-
-text = "CEASER cipher DEMO"
-s = 4
-encrypted = caesarCipher('e', text, s)
-decrypted = caesarCipher('d', encrypted, s)
-
-print(encrypted)
-print(decrypted)

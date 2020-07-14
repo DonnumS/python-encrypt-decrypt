@@ -17,7 +17,20 @@ def informationCBC():
 
 def informationXOR():
     print('''
-    
+    The repeated XOR cipher is an extension of single-byte xor cipher.
+    When it comes to single-byte xoring, it needs a 1 byte key.
+    Lets say this key is "a". When encrypting ro decrypting,
+    each letter of the plaintext is xored with this 1 byte key
+    producing the result. 
+
+    Repeated xor works in the same way, but we now use a longer
+    key. This key can be "python". If we want to xor a plaintext 
+    "Hello there" with this key. We first xor H and p, then e and 
+    y then l and t and so on. When we have looped over the key, 
+    we start a new loop over it. 
+
+    All operations are performed on raw bytes, but in this program 
+    we encode/decode using hex or base64.
     ''')
 
 
